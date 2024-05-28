@@ -3,12 +3,7 @@ const USUARIO_ACTIVO_KEY = "usuario-activo";
 
 const obtenerUsuarios = () => {
     const usuarios = localStorage.getItem(USUARIOS_KEY);
-
-    if (!usuarios) {
-        return [];
-    }
-
-    return JSON.parse(usuarios);
+    return usuarios ? JSON.parse(usuarios) : [];
 };
 
 export const registrar = (firstName, lastName, email, password, confirmPassword) => {
@@ -26,10 +21,10 @@ export const registrar = (firstName, lastName, email, password, confirmPassword)
 
     usuarios.push({
         id: new Date().getTime(),
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
+        firstName,
+        lastName,
+        email,
+        password,
         favoritos: [],
     });
 
@@ -50,19 +45,12 @@ export const login = (email, password) => {
 
 export const obtenerUsuarioEnSesion = () => {
     const usuarioActivo = localStorage.getItem(USUARIO_ACTIVO_KEY);
-
     if (!usuarioActivo) {
         return null;
     }
 
     const usuarios = obtenerUsuarios();
-    for (const usuario of usuarios) {
-        if (usuario.id === parseInt(usuarioActivo)) {
-            return usuario;
-        }
-    }
-
-    return null;
+    return usuarios.find(usuario => usuario.id === parseInt(usuarioActivo)) || null;
 };
 
 export const logout = () => {
@@ -71,7 +59,6 @@ export const logout = () => {
 
 export const actualizarUsuario = (usuarioActualizado) => {
     const usuarios = obtenerUsuarios();
-
     const index = usuarios.findIndex(usuario => usuario.id === usuarioActualizado.id);
     if (index !== -1) {
         usuarios[index] = usuarioActualizado;
@@ -81,7 +68,6 @@ export const actualizarUsuario = (usuarioActualizado) => {
 
 export const agregarFavorito = (favorito) => {
     const usuario = obtenerUsuarioEnSesion();
-
     if (!usuario) {
         throw new Error("No user is currently logged in");
     }
@@ -92,7 +78,6 @@ export const agregarFavorito = (favorito) => {
 
 export const obtenerFavoritos = () => {
     const usuario = obtenerUsuarioEnSesion();
-
     if (!usuario) {
         throw new Error("No user is currently logged in");
     }
@@ -102,7 +87,6 @@ export const obtenerFavoritos = () => {
 
 export const updateUserPassword = async (oldPassword, newPassword) => {
     const usuario = obtenerUsuarioEnSesion();
-
     if (!usuario) {
         throw new Error("No user is currently logged in");
     }

@@ -9,10 +9,15 @@ const render = () => {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
+        if (!email || !password) {
+            alert("Please enter both email and password.");
+            return;
+        }
+
         try {
             login(email, password);
             alert("User logged in successfully!");
-            window.location.href = "myaccount.html";
+            window.location.href = "../Main Page/mainpage.html";
         } catch (error) {
             alert(error.message);
         }
