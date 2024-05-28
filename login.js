@@ -6,12 +6,13 @@ const render = () => {
     loginButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const email = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
         try {
             login(email, password);
-            window.location.href = "../Main Page/mainpage.html";
+            alert("User logged in successfully!");
+            window.location.href = "myaccount.html";
         } catch (error) {
             alert(error.message);
         }

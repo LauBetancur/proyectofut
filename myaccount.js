@@ -1,41 +1,39 @@
-import { obtenerUsuarioEnSesion, logout, actualizarUsuario } from './session.js';
+import { obtenerUsuarioEnSesion, updateUserPassword, logout } from "./session.js";
 
 const render = () => {
-    const usuarioActivo = obtenerUsuarioEnSesion();
+    const nombreField = document.getElementById("nombre");
+    const correoField = document.getElementById("correo");
+    const confirmButton = document.getElementById("confirmButton");
+    const signOutButton = document.getElementById("signOutButton");
 
-    console.log('Usuario activo:', usuarioActivo); // Debugging statement
-
-    if (!usuarioActivo) {
-        window.location.href = '/index.html';
+    // Fetch user information
+    const userInfo = obtenerUsuarioEnSesion();
+    if (!userInfo) {
+        window.location.href = "login.html"; // Redirect to login if not signed in
         return;
     }
 
-    document.getElementById('firstName').value = usuarioActivo.firstName || '';
-    document.getElementById('lastName').value = usuarioActivo.lastName || '';
-    document.getElementById('email').value = usuarioActivo.email || '';
+    // Populate user info
+    nombreField.value = `${userInfo.firstName} ${userInfo.lastName}`;
+    correoField.value = userInfo.email;
 
-    document.getElementById('changeButton').addEventListener('click', () => {
-        const oldPassword = document.getElementById('oldPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-
-        if (oldPassword !== usuarioActivo.password) {
-            alert('Old password is incorrect.');
-            return;
-        }
-
-        if (newPassword) {
-            usuarioActivo.password = newPassword;
-            actualizarUsuario(usuarioActivo);
-            alert('Password updated successfully.');
-        } else {
-            alert('New password cannot be empty.');
+    // Handle password change
+    confirmButton.addEventListener("click", async () => {
+        const oldPassword = document.getElementById("oldPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+        try {
+            await updateUserPassword(oldPassword, newPassword);
+            alert("Password updated successfully!");
+        } catch (error) {
+            alert(error.message);
         }
     });
 
-    document.getElementById('logoutButton').addEventListener('click', () => {
+    // Handle sign out
+    signOutButton.addEventListener("click", () => {
         logout();
-        window.location.href = '../index.html';
+        window.location.href = "login.html";
     });
 };
 
-document.addEventListener('DOMContentLoaded', render);
+document.addEventListener("DOMContentLoaded", render);

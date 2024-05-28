@@ -99,3 +99,18 @@ export const obtenerFavoritos = () => {
 
     return usuario.favoritos;
 };
+
+export const updateUserPassword = async (oldPassword, newPassword) => {
+    const usuario = obtenerUsuarioEnSesion();
+
+    if (!usuario) {
+        throw new Error("No user is currently logged in");
+    }
+
+    if (usuario.password !== oldPassword) {
+        throw new Error("Old password is incorrect");
+    }
+
+    usuario.password = newPassword;
+    actualizarUsuario(usuario);
+};
