@@ -2,13 +2,6 @@ import { registrar } from "./session.js";
 
 const render = () => {
     const signUpButton = document.querySelector("#signUpButton");
-    const popup = document.getElementById("popup");
-    const closeButton = document.querySelector(".close-button");
-    const redirectLoginButton = document.getElementById("redirect-login");
-
-    const togglePopup = () => {
-        popup.style.display = popup.style.display === "block" ? "none" : "block";
-    };
 
     signUpButton.addEventListener("click", (e) => {
         e.preventDefault();
@@ -21,25 +14,10 @@ const render = () => {
 
         try {
             registrar(firstName, lastName, email, password, confirmPassword);
-            togglePopup();
+            alert("User registered successfully!");
+            window.location.href = "login.html";
         } catch (error) {
             alert(error.message);
-        }
-    });
-
-    if (closeButton) {
-        closeButton.addEventListener("click", togglePopup);
-    }
-
-    if (redirectLoginButton) {
-        redirectLoginButton.addEventListener("click", () => {
-            window.location.href = "login.html";
-        });
-    }
-
-    window.addEventListener("click", (event) => {
-        if (event.target === popup) {
-            togglePopup();
         }
     });
 };

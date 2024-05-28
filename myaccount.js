@@ -1,29 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const confirmButton = document.querySelector('.bc');
+import { obtenerUsuarioEnSesion, logout, actualizarUsuario } from './session.js';
 
-    confirmButton.addEventListener('click', function(event) {
-        event.preventDefault(); 
+const render = () => {
+    const usuarioActivo = obtenerUsuarioEnSesion();
 
-        const oldPasswordInput = document.getElementById('ipi');
-        const newPasswordInput = document.querySelectorAll('#ipi')[1];
+    console.log('Usuario activo:', usuarioActivo); // Debugging statement
 
-        if (oldPasswordInput.value.trim() === '' || newPasswordInput.value.trim() === '') {
-            alert('Por favor, completa todos los campos.');
+    if (!usuarioActivo) {
+        window.location.href = '/index.html';
+        return;
+    }
+
+    document.getElementById('firstName').value = usuarioActivo.firstName || '';
+    document.getElementById('lastName').value = usuarioActivo.lastName || '';
+    document.getElementById('email').value = usuarioActivo.email || '';
+
+    document.getElementById('changeButton').addEventListener('click', () => {
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+
+        if (oldPassword !== usuarioActivo.password) {
+            alert('Old password is incorrect.');
             return;
         }
 
-        const newPassword = newPasswordInput.value;
-        if (!/(?=(.*[A-Z]){2})(?=.*[!@#$%^&*])/.test(newPassword)) {
-            alert('La nueva contraseña debe contener al menos 2 mayúsculas y un caracter especial.');
-            return;
+        if (newPassword) {
+            usuarioActivo.password = newPassword;
+            actualizarUsuario(usuarioActivo);
+            alert('Password updated successfully.');
+        } else {
+            alert('New password cannot be empty.');
         }
-        
-        const oldPassword = oldPasswordInput.value;
-        if (oldPassword === newPassword) {
-            alert('La nueva contraseña no puede ser igual a la antigua.');
-            return;
-        }
-
-        alert('Contraseña actualizada correctamente!');
     });
-});
+
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        logout();
+        window.location.href = '../index.html';
+    });
+};
+
+document.addEventListener('DOMContentLoaded', render);

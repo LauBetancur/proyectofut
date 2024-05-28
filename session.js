@@ -68,3 +68,34 @@ export const obtenerUsuarioEnSesion = () => {
 export const logout = () => {
     localStorage.removeItem(USUARIO_ACTIVO_KEY);
 };
+
+export const actualizarUsuario = (usuarioActualizado) => {
+    const usuarios = obtenerUsuarios();
+
+    const index = usuarios.findIndex(usuario => usuario.id === usuarioActualizado.id);
+    if (index !== -1) {
+        usuarios[index] = usuarioActualizado;
+        localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
+    }
+};
+
+export const agregarFavorito = (favorito) => {
+    const usuario = obtenerUsuarioEnSesion();
+
+    if (!usuario) {
+        throw new Error("No user is currently logged in");
+    }
+
+    usuario.favoritos.push(favorito);
+    actualizarUsuario(usuario);
+};
+
+export const obtenerFavoritos = () => {
+    const usuario = obtenerUsuarioEnSesion();
+
+    if (!usuario) {
+        throw new Error("No user is currently logged in");
+    }
+
+    return usuario.favoritos;
+};

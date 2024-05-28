@@ -1,31 +1,21 @@
 import { login } from "./session.js";
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loginButton = document.getElementById('login-button');
+const render = () => {
+    const loginButton = document.querySelector("#login-button");
 
-    loginButton.addEventListener('click', function(event) {
-        event.preventDefault(); 
+    loginButton.addEventListener("click", (e) => {
+        e.preventDefault();
 
-        const username = document.getElementById('user').value;
-        const password = document.getElementById('password').value;
-
-        if (!/[^A-Za-z0-9]/.test(username)) {
-            alert('El nombre de usuario debe incluir al menos un carácter especial.');
-            return;
-        }
-
-        if (!/(?=(.*[A-Z]){2})(?=.*[!@#$%^&*])(?=.*[0-9])/.test(password)) {
-            alert('La contraseña debe contener al menos 2 mayúsculas, un caracter especial y números.');
-            return;
-        }
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
 
         try {
-            login(username, password);
-            alert('¡Inicio de sesión exitoso!');
-            window.location.href = "../index.html";
+            login(email, password);
+            window.location.href = "../Main Page/mainpage.html";
         } catch (error) {
             alert(error.message);
         }
     });
-});
+};
 
+document.addEventListener("DOMContentLoaded", render);
